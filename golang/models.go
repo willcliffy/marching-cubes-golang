@@ -26,9 +26,9 @@ func (v Vector3) Div(divisor float64) Vector3 {
 
 func (v Vector3) Cross(factor Vector3) Vector3 {
 	return Vector3{
-		v.X * factor.X,
-		v.Y * factor.Y,
-		v.Z * factor.Z,
+		v.X*factor.Z - v.Z*factor.Y,
+		v.Z*factor.X - v.X*factor.Z,
+		v.X*factor.Y - v.Y*factor.X,
 	}
 }
 

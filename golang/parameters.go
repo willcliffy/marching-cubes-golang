@@ -1,38 +1,31 @@
 package main
 
 type MarchingCubesParams struct {
-	size          Vector3
-	scale         float64
-	voxelsPerAxis int
-	isoLevel      float64
+	size       Vector3
+	scale      float64
+	isoLevel   float64
+	resolution float64
 }
 
 func (p MarchingCubesParams) sampleNoise(pos Vector3) float64 {
+	var sample float64
+
 	if pos.X < p.size.X*0.05 || pos.X > p.size.X*0.95 {
-		return 0.5
-	} else if pos.Z < p.size.X*0.05 || pos.X > p.size.X*0.95 {
-		return 0.5
+		sample = 0.0
+	} else if pos.Z < p.size.Z*0.05 || pos.Z > p.size.Z*0.95 {
+		sample = 0.0
 	} else if pos.Y < p.size.Y*0.05 {
-		return 0.5
+		sample = 0.0
 	} else if pos.Y < p.size.Y*0.1 {
-		return 1
+		sample = 1.0
 	} else {
-		return 0.5 * (noise.Noise3D(pos.X, pos.Y, pos.Z) + 1)
+		sample = noise.Noise3D(pos.X, pos.Y, pos.Z)
 	}
+
+	return 0.5 * (sample + 1.0)
 }
 
 func (m MarchingCubesParams) interpolateVerts(v1, v2 Vector4) Vector3 {
 	t := (m.isoLevel - v1.W) / (v2.W - v1.W)
-
-	// fmt.Printf("interp - t: %v\n\tv1: %v\n\tv2: %v\n\tv2.sub(v1): %v\n\tsubmul: %v\n\tsubmuladd: %v\n\ttv3: %v\n",
-	// 	t,
-	// 	v1,
-	// 	v2,
-	// 	v2.Sub(v1),
-	// 	v2.Sub(v1).Mul(t),
-	// 	v1.Add(v2.Sub(v1).Mul(t)),
-	// 	v1.Add(v2.Sub(v1).Mul(t)).ToVector3(),
-	// )
-
 	return v1.Add(v2.Sub(v1).Mul(t)).ToVector3()
 }

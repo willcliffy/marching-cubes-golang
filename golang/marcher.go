@@ -37,9 +37,6 @@ func (m *Marcher) March() bool {
 	offset := m.tables.Offsets[index]
 	numIndices := m.tables.Lengths[index]
 
-	// fmt.Printf("%v index: %v, offset: %v, num_indices: %v\n", m.cursor, index, offset, numIndices)
-	// fmt.Printf("\tcorners: %v\n", corners)
-
 	for i := 0; i < numIndices; i += 3 {
 		m.computed = append(m.computed, m.createTriangle(i, offset, corners))
 	}
@@ -48,17 +45,15 @@ func (m *Marcher) March() bool {
 }
 
 func (m Marcher) evaluate(pos Vector3) Vector4 {
-	cellSize := 1.0 / float64(m.params.voxelsPerAxis) * m.params.scale
+	cellSize := m.params.resolution * m.params.scale
 	centerSnapped := Vector3{
 		X: cellSize * math.Floor(pos.X/cellSize+0.5*sign(pos.X)),
 		Y: cellSize * math.Floor(pos.Y/cellSize+0.5*sign(pos.Y)),
 		Z: cellSize * math.Floor(pos.Z/cellSize+0.5*sign(pos.Z)),
 	}
 
-	worldPosition := pos.
-		Div(float64(m.params.voxelsPerAxis)).
-		Mul(m.params.scale).
-		Add(centerSnapped)
+	positionNorm := pos.Mul(m.params.resolution).Mul(m.params.scale)
+	worldPosition := positionNorm.Add(centerSnapped)
 
 	density := m.params.sampleNoise(worldPosition)
 
@@ -128,7 +123,10 @@ func (m Marcher) createTriangle(i int, offset int, corners []Vector4) Triangle {
 	B := m.params.interpolateVerts(corners[a1], corners[b1])
 	C := m.params.interpolateVerts(corners[a2], corners[b2])
 
-	Normal := B.Sub(A).Cross(C.Sub(A)).Normalized()
+	AB := B.Sub(A)
+	AC := C.Sub(A)
+
+	Normal := AC.Cross(AB).Normalized()
 
 	triangle := Triangle{A, B, C, Normal}
 

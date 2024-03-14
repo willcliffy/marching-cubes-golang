@@ -1,13 +1,24 @@
 extends Node3D
 
+signal data_loaded(triangles: Array)
 
-func _ready():
-	var data = load_json("res://out.json")
+const check_time_interval_sec = 5
+const TRIANGLES_FILE = "res://out.json"
+
+var last_md5
+
+
+func _process(_delta):
+	var md5 = FileAccess.get_md5(TRIANGLES_FILE)
+	if md5 != last_md5:
+		reload()
+		last_md5 = md5
+
+
+func reload():
+	var data = load_json(TRIANGLES_FILE)
 	if not data:
 		return
-
-	#for d in data:
-		#print(d)
 
 	var triangles = []
 	for d in data:
@@ -17,8 +28,9 @@ func _ready():
 			"c": Vector3(d.C.X, d.C.Y, d.C.Z),
 			"n": Vector3(d.Normal.X, d.Normal.Y, d.Normal.Z),
 		})
-
-	$terrain.generate(triangles)
+	
+	print("reload. ", len(triangles))
+	data_loaded.emit(triangles)
 
 
 func load_json(file_name: String):

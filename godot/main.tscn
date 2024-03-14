@@ -16,7 +16,7 @@ sky = SubResource("Sky_hyk6o")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gfybq"]
 cull_mode = 2
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_5syew"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_qiuu2"]
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_6jyjd")
@@ -26,14 +26,17 @@ environment = SubResource("Environment_5g8cv")
 
 [node name="terrain" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_gfybq")
-mesh = SubResource("ArrayMesh_5syew")
+mesh = SubResource("ArrayMesh_qiuu2")
 script = ExtResource("2_sq83q")
 
 [node name="base" type="Node3D" parent="."]
+transform = Transform3D(0.867765, -0.400011, 0.294914, 0, 0.593419, 0.804894, -0.496974, -0.698459, 0.514948, 0, 0, 0)
 script = ExtResource("2_xr17p")
 
 [node name="camera" type="Camera3D" parent="base"]
-transform = Transform3D(1, 0, 0, 0, 0.873118, 0.487509, 0, -0.487509, 0.873118, 0, 1.24347, 2.09586)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.583867, 0.811849, 0, -0.811849, -0.583867, 0, 1.68785, -5.39386)
+
+[connection signal="data_loaded" from="." to="terrain" method="generate"]

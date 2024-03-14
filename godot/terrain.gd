@@ -2,7 +2,7 @@ extends MeshInstance3D
 
 func generate(data: Array):
 	var num_triangles = len(data)
-	var num_verts : int = num_triangles * 3
+	var num_verts: int = num_triangles * 3
 
 	print("in terrain, got ", num_triangles, " triangles")
 
@@ -28,5 +28,5 @@ func generate(data: Array):
 		mesh_data.resize(Mesh.ARRAY_MAX)
 		mesh_data[Mesh.ARRAY_VERTEX] = verts
 		mesh_data[Mesh.ARRAY_NORMAL] = normals
-		# MeshInstance.mesh.clear_surfaces()
+		mesh.clear_surfaces()
 		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)

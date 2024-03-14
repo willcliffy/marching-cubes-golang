@@ -18,10 +18,10 @@ var noise = perlin.NewPerlin(PerlinAlpha, PerlinBeta, PerlinN, PerlinSeed)
 
 func main() {
 	params := MarchingCubesParams{
-		size:          Vector3{X: 20, Y: 20, Z: 20},
-		scale:         1,
-		voxelsPerAxis: 32,
-		isoLevel:      0.6,
+		size:       Vector3{X: 20, Y: 5, Z: 20},
+		scale:      1.0,
+		isoLevel:   0.5,
+		resolution: 1.0 / 64.0,
 	}
 
 	tables, err := LoadTables("tables.json")
@@ -43,7 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	err = os.WriteFile("out.json", bytes, 0644)
+	err = os.WriteFile("../godot/out.json", bytes, 0644)
 	if err != nil {
 		panic(err)
 	}
