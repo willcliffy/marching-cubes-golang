@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bdt8282cvaym0"
+path="res://.godot/imported/marching_cubes_density.glsl-aed666c18352afe89cef3d2ceeec51a3.res"
+
+[deps]
+
+source_file="res://marching_cubes_density.glsl"
+dest_files=["res://.godot/imported/marching_cubes_density.glsl-aed666c18352afe89cef3d2ceeec51a3.res"]
+
+[params]
+

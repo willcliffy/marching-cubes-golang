@@ -1,0 +1,19 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://b284fvsxmnust"]
+
+[ext_resource type="Shader" path="res://ground.gdshader" id="1_yq12j"]
+
+[sub_resource type="Gradient" id="Gradient_b215x"]
+offsets = PackedFloat32Array(0.0930576, 0.10192, 0.196455, 0.718529, 0.951256, 1)
+colors = PackedColorArray(0, 0.280857, 0.537502, 1, 1, 0.855032, 0.44972, 1, 0.326747, 0.449127, 0.138147, 1, 0.260512, 0.433541, 0.156567, 1, 0.612214, 0.47252, 0.282751, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mttbw"]
+gradient = SubResource("Gradient_b215x")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_yq12j")
+shader_parameter/_Color = Color(0.862745, 0.862745, 0.862745, 1)
+shader_parameter/_Glossiness = 0.5
+shader_parameter/_Metallic = 0.0
+shader_parameter/boundsY = 10.0
+shader_parameter/_MainTex = SubResource("GradientTexture2D_mttbw")

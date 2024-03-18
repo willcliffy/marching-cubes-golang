@@ -1,0 +1,49 @@
+[gd_scene load_steps=10 format=3 uid="uid://cdp0f55mjwane"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_6jyjd"]
+[ext_resource type="Material" uid="uid://b284fvsxmnust" path="res://ground.tres" id="2_h7xdu"]
+[ext_resource type="Script" path="res://terrain.gd" id="2_sq83q"]
+[ext_resource type="Script" path="res://camera.gd" id="2_xr17p"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a56uf"]
+
+[sub_resource type="Sky" id="Sky_hyk6o"]
+sky_material = SubResource("ProceduralSkyMaterial_a56uf")
+
+[sub_resource type="Environment" id="Environment_5g8cv"]
+background_mode = 2
+sky = SubResource("Sky_hyk6o")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qiuu2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_816h2"]
+size = Vector3(100, 2, 100)
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_6jyjd")
+
+[node name="environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5g8cv")
+
+[node name="terrain" type="MeshInstance3D" parent="."]
+material_override = ExtResource("2_h7xdu")
+mesh = SubResource("ArrayMesh_qiuu2")
+script = ExtResource("2_sq83q")
+
+[node name="base" type="Node3D" parent="."]
+transform = Transform3D(-0.707107, 0.454519, -0.541675, 0, 0.766044, 0.642788, 0.707107, 0.454519, -0.541675, 0, 0, 0)
+script = ExtResource("2_xr17p")
+
+[node name="camera" type="Camera3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.583867, 0.811849, 0, -0.811849, -0.583867, 0, 1.68785, -5.39386)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_816h2")
+
+[connection signal="data_loaded" from="." to="terrain" method="generate"]

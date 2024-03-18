@@ -1,0 +1,67 @@
+[gd_scene load_steps=11 format=3 uid="uid://bjlfm85ifo0vk"]
+
+[ext_resource type="Script" path="res://camera.gd" id="1_4ss66"]
+[ext_resource type="Script" path="res://main.gd" id="1_a346g"]
+[ext_resource type="Sky" uid="uid://baaivdqf6m0i0" path="res://environment/Sky.tres" id="1_vr6tv"]
+[ext_resource type="Script" path="res://environment/environment.gd" id="2_hq6pp"]
+[ext_resource type="Script" path="res://terrain.gd" id="5_ru7ye"]
+[ext_resource type="Material" uid="uid://b284fvsxmnust" path="res://ground.tres" id="6_wn35w"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7o3sx"]
+frequency = 0.03
+cellular_distance_function = 3
+cellular_return_type = 0
+
+[sub_resource type="Environment" id="Environment_t063e"]
+background_mode = 2
+sky = ExtResource("1_vr6tv")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_is8mu"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_lspjl"]
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_a346g")
+size = Vector3i(100, 20, 100)
+iso_level = 0.55
+sea_level = 4
+low_multiplicative_coefficient = 1.05
+low_additive_coefficient = 0.05
+high_multiplicative_coefficient = 1.0
+high_additive_coefficient = -0.06
+noise_source = SubResource("FastNoiseLite_7o3sx")
+
+[node name="environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_t063e")
+script = ExtResource("2_hq6pp")
+day_time = 11.8812
+clouds_cutoff = 0.5
+sun_base_enegry = 1.0
+moon_base_enegry = 1.0
+
+[node name="Sun" type="DirectionalLight3D" parent="environment"]
+transform = Transform3D(0.920899, 0, -0.3898, 0.389612, 0.0310968, 0.920454, 0.0121215, -0.999516, 0.028637, 0, 0, 0)
+rotation_order = 4
+
+[node name="Moon" type="DirectionalLight3D" parent="environment"]
+transform = Transform3D(0.997038, 0, 0.0769121, -0.0263391, 0.939534, 0.341443, -0.0722614, -0.342458, 0.936751, 0, 0, 0)
+rotation_order = 4
+
+[node name="camera" type="Node3D" parent="."]
+transform = Transform3D(-0.707107, 0.353553, -0.612372, 0, 0.866025, 0.5, 0.707107, 0.353553, -0.612372, 0, 0, 0)
+script = ExtResource("1_4ss66")
+
+[node name="camera" type="Camera3D" parent="camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+
+[node name="terrain" type="Node3D" parent="."]
+script = ExtResource("5_ru7ye")
+
+[node name="mesh" type="MeshInstance3D" parent="terrain"]
+material_override = ExtResource("6_wn35w")
+mesh = SubResource("ArrayMesh_is8mu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_lspjl")
+
+[connection signal="compute_done" from="." to="terrain" method="generate"]

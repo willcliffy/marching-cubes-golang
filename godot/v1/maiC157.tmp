@@ -1,0 +1,54 @@
+[gd_scene load_steps=12 format=3 uid="uid://1ksjfuyuptqn"]
+
+[ext_resource type="Script" path="res://cpu.gd" id="2_h6ilm"]
+[ext_resource type="Script" path="res://compute.gd" id="2_su538"]
+[ext_resource type="Script" path="res://terrain.gd" id="3_0w057"]
+[ext_resource type="Shader" path="res://noise_display.gdshader" id="3_n8suu"]
+[ext_resource type="NoiseTexture3D" uid="uid://c6rbvtnov12e6" path="res://terrain_noise.tres" id="4_dab1n"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7uc5l"]
+
+[sub_resource type="Sky" id="Sky_yspsm"]
+sky_material = SubResource("ProceduralSkyMaterial_7uc5l")
+
+[sub_resource type="Environment" id="Environment_30o7b"]
+background_mode = 2
+sky = SubResource("Sky_yspsm")
+
+[sub_resource type="PlaceholderMesh" id="PlaceholderMesh_n4b31"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jmcex"]
+size = Vector3(10, 10, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2538w"]
+render_priority = 0
+shader = ExtResource("3_n8suu")
+shader_parameter/noise_texture = ExtResource("4_dab1n")
+
+[node name="Main" type="Node3D"]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.637222, 0.485757, -0.598321, 0, 0.776354, 0.630297, 0.77068, -0.401639, 0.49471, 0, 16.1597, 14.7152)
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_30o7b")
+
+[node name="GPU" type="Node" parent="."]
+script = ExtResource("2_su538")
+
+[node name="CPU" type="Node" parent="."]
+script = ExtResource("2_h6ilm")
+
+[node name="Terrain" type="Node3D" parent="."]
+script = ExtResource("3_0w057")
+
+[node name="Mesh" type="MeshInstance3D" parent="Terrain"]
+mesh = SubResource("PlaceholderMesh_n4b31")
+skeleton = NodePath("../..")
+
+[node name="Noise" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jmcex")
+surface_material_override/0 = SubResource("ShaderMaterial_2538w")
+
+[connection signal="compute_completed" from="GPU" to="Terrain" method="generate"]
+[connection signal="compute_completed" from="CPU" to="Terrain" method="generate"]
